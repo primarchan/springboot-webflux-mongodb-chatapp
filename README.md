@@ -1,3 +1,2 @@
-# Spring Boot, MongoDB 기반 채팅 서버
-
+# Spring Boot, WebFlux, MongoDB 기반 채팅 App
 
