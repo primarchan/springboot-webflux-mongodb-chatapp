@@ -19,6 +19,8 @@ public class Chat {
 
     private String receiver;  // 수신자
 
-    private LocalDateTime createdAt;
+    private Integer roomNum;  // 채팅방 번호호
+
+   private LocalDateTime createdAt;
 
 }

@@ -20,14 +20,25 @@ public class ChatController {
 
     private final ChatRepository chatRepository;
 
-    /**
-     * TEXT_EVENT_STREAM_VALUE : SSE 프로토콜, Response 가 끊기지 않고 계속 유지 됨
-     */
-    @GetMapping(value = "/sender/{sender}/receiver/{receiver}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<Chat> getMessage(@PathVariable String sender, @PathVariable String receiver) {
-        return chatRepository.mFindBySender(sender, receiver).subscribeOn(Schedulers.boundedElastic());
+    @CrossOrigin
+    @GetMapping(value = "/chat/roomNum/{roomNum}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<Chat> findByRoomNum(@PathVariable Integer roomNum) {
+        return chatRepository.mFindByRoomNum(roomNum)
+                .subscribeOn(Schedulers.boundedElastic());
     }
 
+    /**
+     * TEXT_EVENT_STREAM_VALUE : SSE 프로토콜, Response 가 끊기지 않고 계속 유지 됨
+     * 특정 상대와 귓속말 기능 시 사용
+     */
+    @CrossOrigin
+    @GetMapping(value = "/sender/{sender}/receiver/{receiver}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<Chat> getMessage(@PathVariable String sender, @PathVariable String receiver) {
+        return chatRepository.mFindBySender(sender, receiver)
+                .subscribeOn(Schedulers.boundedElastic());
+    }
+
+    @CrossOrigin
     @PostMapping("/chat")
     public Mono<Chat> sendMessage(@RequestBody Chat chat) {  // Mono : 요청 1건 당 응답 1건
         chat.setCreatedAt(LocalDateTime.now());
